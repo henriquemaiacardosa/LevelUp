@@ -49,7 +49,7 @@ A demanda pela solução foi validada diretamente com a comunidade acadêmica, f
 | :--- | :--- | :--- | :--- |
 | **1. Grupos de WhatsApp da Turma** | Acesso rápido; comunicação informal; alto alcance. | Caótico; informações se perdem; não gera histórico ou comprovação de horas para o tutor. | Geração de certificados automatizados de Horas Complementares; histórico de sessões em banco de dados estruturado. |
 | **2. Plataformas como Superprof** | Excelente usabilidade; filtros de busca refinados; sistema de agendamento funcional. | Modelo de negócio 100% financeiro (B2C/C2C); focado em aulas pagas e inacessível para nivelamento comunitário universitário. | Arquitetura P2P comunitária sem transações financeiras; moeda de troca baseada em gamificação. |
-
+<img src="img/superprof.png" width="400" alt="Resultado pesquisa">
 > **Nota:** É possível verificar que as plataformas atuais requerem pagamento para a utilização da tutoria. A plataforma LevelUp, por sua vez, poderá ser utilizada por total voluntariado. 
 
 ### 1.4 Público-Alvo
