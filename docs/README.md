@@ -18,7 +18,7 @@ Atualmente o ambiente universitário apresenta altas taxas de retenção em disc
 
 Atualmente, essa dor é mitigada de forma ineficiente através de mensagens desestruturadas em grupos de WhatsApp ou pelo “boca a boca” onde alunos recomendam outros alunos que se destacam no curso, porém há problemas como horários rígidos, escassez de vagas (para alunos que querem aprender, e de alunos para ensinar) e falta de escalabilidade. A principal limitação do modelo atual é a falta de incentivo tangível para que os alunos de semestres avançados dediquem seu tempo livre para atuar como tutores informais, gerando um desequilíbrio no mercado de "dois lados" (muita demanda por aprendizado, baixa oferta de ensino voluntário).
 
-![Print da conversa no WhatsApp demonstrando a dificuldade de conciliar horários](./img/Simulação conversa WhatsApp (1).png)
+![Print da conversa no WhatsApp demonstrando a dificuldade de conciliar horários](./img/print.png)
 
 
 
