@@ -17,8 +17,11 @@
 Atualmente o ambiente universitário apresenta altas taxas de retenção em disciplinas. O problema central reside na desconexão entre alunos que possuem dificuldades específicas (demanda) e alunos que possuem domínio dessas disciplinas e disponibilidade para ensinar (oferta).
 
 Atualmente, essa dor é mitigada de forma ineficiente através de mensagens desestruturadas em grupos de WhatsApp ou pelo “boca a boca” onde alunos recomendam outros alunos que se destacam no curso, porém há problemas como horários rígidos, escassez de vagas (para alunos que querem aprender, e de alunos para ensinar) e falta de escalabilidade. A principal limitação do modelo atual é a falta de incentivo tangível para que os alunos de semestres avançados dediquem seu tempo livre para atuar como tutores informais, gerando um desequilíbrio no mercado de "dois lados" (muita demanda por aprendizado, baixa oferta de ensino voluntário).
-
-![Print da conversa no WhatsApp demonstrando a dificuldade de conciliar horários](./img/Simulação conversa WhatsApp (1).png)
+> **Nota:** As imagens abaixo são meramente ilustrativas, porém servem para demonstrar um problema real. 
+<img src="img/print4.png" width="400" alt="Print da conversa no WhatsApp demonstrando a dificuldade de conciliar horários">
+<img src="img/print3.png" width="400" alt="Print da conversa no WhatsApp demonstrando a dificuldade de conciliar horários">
+<img src="img/print2.png" width="400" alt="Print da conversa no WhatsApp demonstrando a dificuldade de conciliar horários">
+<img src="img/print1.png" width="400" alt="Print da conversa no WhatsApp demonstrando a dificuldade de conciliar horários">
 
 
 
@@ -26,6 +29,12 @@ Atualmente, essa dor é mitigada de forma ineficiente através de mensagens dese
 A demanda pela solução foi validada diretamente com a comunidade acadêmica, foco do impacto extensionista deste projeto.
 
 **Pesquisa com Usuários:** Foi realizada uma pesquisa quantitativa via Google Forms com estudantes de graduação. O levantamento identificou um claro interesse no modelo de mentoria por pares, evidenciou tanto a vontade por aprender como o voluntariado para ensinar:
+
+<img src="img/respostasForms.png" width="400" alt="Resultado pesquisa">
+<img src="img/evidenciaForms1.png" width="400" alt="Resultado pesquisa">
+<img src="img/evidenciaForms2.png" width="400" alt="Resultado pesquisa">
+<img src="img/evidenciaForms3.png" width="400" alt="Resultado pesquisa">
+<img src="img/evidenciaForms4.png" width="400" alt="Resultado pesquisa">
 
 * **Dificuldade e preferência por ajuda de colegas:** 53,3% afirmaram que já tiveram dificuldades e sentem que a explicação de um colega ajudaria mais do que a do professor.
 * **Disposição para ajudar:** 40% afirmaram que topariam ajudar colegas de semestres anteriores, enquanto 26,7% disseram que depende da matéria.
