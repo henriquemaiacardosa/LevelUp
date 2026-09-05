@@ -5,11 +5,81 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id_usuario     Int      @id @default(autoincrement())
+  nome           String
+  email          String   @unique
+  senha_hash     String
+  curso          String?
+  semestre       Int?
+  xp_ensino      Int      @default(0)
+  xp_aprendizado Int      @default(0)
+  criado_em      DateTime @default(now())
+
+  habilidades       Inventario_Habilidades[]
+  mentorias_aluno   Mentoria[]                @relation("Aprendiz")
+  mentorias_tutor   Mentoria[]                @relation("Tutoria")
+
+  @@map("Usuario")
+}
+
+model Disciplina {
+  id_disciplina     Int    @id @default(autoincrement())
+  nome_disciplina   String
+  area_conhecimento String?
+
+  habilidades Inventario_Habilidades[]
+  mentorias   Mentoria[]
+
+  @@map("Disciplina")
+}
+
+enum TipoHabilidade {
+  OFERTA  
+  DEMANDA  
+}
+
+model Inventario_Habilidades {
+  id_habilidade   Int            @id @default(autoincrement())
+  id_usuario      Int
+  id_disciplina   Int
+  tipo_habilidade TipoHabilidade
+
+  usuario    Usuario    @relation(fields: [id_usuario], references: [id_usuario])
+  disciplina Disciplina @relation(fields: [id_disciplina], references: [id_disciplina])
+
+  @@unique([id_usuario, id_disciplina, tipo_habilidade])
+  @@map("Inventario_Habilidades")
+}
+
+enum StatusMentoria {
+  PENDENTE
+  CONFIRMADA
+  CONCLUIDA
+  CANCELADA
+}
+
+model Mentoria {
+  id_mentoria       Int             @id @default(autoincrement())
+  id_aluno          Int
+  id_tutor          Int
+  id_disciplina     Int
+  data_hora         DateTime
+  status            StatusMentoria  @default(PENDENTE)
+  link_videochamada String?
+  criado_em         DateTime        @default(now())
+
+  aluno      Usuario    @relation("Aprendiz", fields: [id_aluno], references: [id_usuario])
+  tutor      Usuario    @relation("Tutoria", fields: [id_tutor], references: [id_usuario])
+  disciplina Disciplina @relation(fields: [id_disciplina], references: [id_disciplina])
+
+  @@map("Mentoria")
 }
