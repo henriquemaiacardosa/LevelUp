@@ -17,8 +17,29 @@ async function cadastrar(req, res) {
     if (erro.message === 'E-mail já cadastrado') {
       return res.status(409).json({ erro: erro.message });
     }
+
     return res.status(500).json({ erro: 'Erro interno ao processar o cadastro.' });
   }
 }
 
-module.exports = { cadastrar };
+async function login(req, res) {
+  const { email, senha } = req.body;
+
+  if (!email || !senha) {
+    return res.status(400).json({ erro: 'E-mail e senha são obrigatórios.' });
+  }
+
+  try {
+    const resultado = await authService.login({ email, senha });
+
+    return res.status(200).json(resultado);
+  } catch (erro) {
+    if (erro.message === 'Credenciais inválidas') {
+      return res.status(401).json({ erro: erro.message });
+    }
+
+    return res.status(500).json({ erro: 'Erro interno ao processar o login.' });
+  }
+}
+
+module.exports = { cadastrar, login };

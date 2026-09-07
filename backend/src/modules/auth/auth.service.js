@@ -1,5 +1,6 @@
 const authRepository = require('./auth.repository');
-const { gerarHash } = require('../../utils/hash');
+const { gerarHash, compararSenha } = require('../../utils/hash');
+const { gerarToken } = require('../../utils/jwt');
 
 async function cadastrar({ nome, email, senha }) {
   const usuarioExistente = await authRepository.buscarPorEmail(email);
@@ -15,4 +16,22 @@ async function cadastrar({ nome, email, senha }) {
   return novoUsuario;
 }
 
-module.exports = { cadastrar };
+async function login({ email, senha }) {
+  const usuario = await authRepository.buscarPorEmail(email);
+
+  if (!usuario) {
+    throw new Error('Credenciais inválidas');
+  }
+
+  const senhaConfere = await compararSenha(senha, usuario.senha_hash);
+
+  if (!senhaConfere) {
+    throw new Error('Credenciais inválidas');
+  }
+
+  const token = gerarToken({ id_usuario: usuario.id_usuario });
+
+  return { token, usuario: { id_usuario: usuario.id_usuario, nome: usuario.nome, email: usuario.email } };
+}
+
+module.exports = { cadastrar, login };

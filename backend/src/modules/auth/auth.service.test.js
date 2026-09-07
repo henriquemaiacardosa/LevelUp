@@ -43,3 +43,52 @@ describe('AuthService - Cadastro de Usuário (RF01)', () => {
     expect(authRepository.criar).not.toHaveBeenCalled();
   });
 });
+
+describe('AuthService - Login de Usuário (RF02)', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('deve retornar um token JWT quando o e-mail e a senha estiverem corretos', async () => {
+    const { gerarHash } = require('../../utils/hash');
+    const hashSalvo = await gerarHash('senhaCorreta123');
+
+    authRepository.buscarPorEmail.mockResolvedValue({
+      id_usuario: 5,
+      nome: 'Ana Beatriz',
+      email: 'ana@universidade.edu.br',
+      senha_hash: hashSalvo,
+    });
+
+    const resultado = await authService.login({
+      email: 'ana@universidade.edu.br',
+      senha: 'senhaCorreta123',
+    });
+
+    expect(resultado.token).toBeDefined();
+    expect(typeof resultado.token).toBe('string');
+  });
+
+  it('deve rejeitar o login se o e-mail não existir', async () => {
+    authRepository.buscarPorEmail.mockResolvedValue(null);
+
+    await expect(
+      authService.login({ email: 'inexistente@universidade.edu.br', senha: '123456' })
+    ).rejects.toThrow('Credenciais inválidas');
+  });
+
+  it('deve rejeitar o login se a senha estiver incorreta', async () => {
+    const { gerarHash } = require('../../utils/hash');
+    const hashSalvo = await gerarHash('senhaCorreta123');
+
+    authRepository.buscarPorEmail.mockResolvedValue({
+      id_usuario: 5,
+      email: 'ana@universidade.edu.br',
+      senha_hash: hashSalvo,
+    });
+
+    await expect(
+      authService.login({ email: 'ana@universidade.edu.br', senha: 'senhaErrada' })
+    ).rejects.toThrow('Credenciais inválidas');
+  });
+});
