@@ -33,7 +33,7 @@ model Usuario {
 
 model Disciplina {
   id_disciplina     Int    @id @default(autoincrement())
-  nome_disciplina   String
+  nome_disciplina   String   @unique
   area_conhecimento String?
 
   habilidades Inventario_Habilidades[]
