@@ -28,4 +28,18 @@ describe('UsersService - Editar Perfil Acadêmico (RF04)', () => {
       semestre: 5,
     });
   });
+
+  it('nunca deve retornar o campo senha_hash na resposta', async () => {
+    usersRepository.atualizarPerfil.mockResolvedValue({
+      id_usuario: 1,
+      nome: 'Ana Beatriz',
+      email: 'ana@universidade.edu.br',
+      curso: 'Engenharia de Software',
+      semestre: 5,
+    });
+
+    const usuario = await usersService.atualizarPerfil(1, { curso: 'ES', semestre: 5 });
+
+    expect(usuario.senha_hash).toBeUndefined();
+  });
 });
