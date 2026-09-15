@@ -7,7 +7,6 @@ function autenticar(req, res, next) {
     return res.status(401).json({ erro: 'Token de autenticação não fornecido.' });
   }
 
-  // O header vem no formato "Bearer <token>" — extraímos só o token.
   const [, token] = authHeader.split(' ');
 
   try {
