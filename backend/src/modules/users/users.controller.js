@@ -4,6 +4,10 @@ async function atualizarPerfil(req, res) {
   const { id_usuario } = req.usuario;
   const { curso, semestre } = req.body;
 
+  if (semestre !== undefined && (typeof semestre !== 'number' || !Number.isInteger(semestre) || semestre < 1)) {
+    return res.status(400).json({ erro: 'Semestre deve ser um número inteiro positivo.' });
+  }
+
   try {
     const usuarioAtualizado = await usersService.atualizarPerfil(id_usuario, {
       curso,
