@@ -26,3 +26,27 @@ describe('SkillsService - Cadastrar Demanda (RF05)', () => {
     });
   });
 });
+
+describe('SkillsService - Cadastrar Oferta (RF06)', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('deve cadastrar uma disciplina como Oferta para o usuário', async () => {
+    skillsRepository.criarHabilidade.mockResolvedValue({
+      id_habilidade: 2,
+      id_usuario: 10,
+      id_disciplina: 5,
+      tipo_habilidade: 'OFERTA',
+    });
+
+    const resultado = await skillsService.cadastrarOferta(10, 5);
+
+    expect(resultado.tipo_habilidade).toBe('OFERTA');
+    expect(skillsRepository.criarHabilidade).toHaveBeenCalledWith({
+      id_usuario: 10,
+      id_disciplina: 5,
+      tipo_habilidade: 'OFERTA',
+    });
+  });
+});

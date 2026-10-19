@@ -39,3 +39,32 @@ describe('POST /api/skills/demanda (RF05)', () => {
     expect(skillsService.cadastrarDemanda).not.toHaveBeenCalled();
   });
 });
+
+describe('POST /api/skills/oferta (RF06)', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('deve retornar 201 ao cadastrar uma oferta com sucesso', async () => {
+    skillsService.cadastrarOferta.mockResolvedValue({
+      id_habilidade: 2,
+      id_usuario: 10,
+      id_disciplina: 5,
+      tipo_habilidade: 'OFERTA',
+    });
+
+    const resposta = await request(app)
+      .post('/api/skills/oferta')
+      .send({ id_disciplina: 5 });
+
+    expect(resposta.status).toBe(201);
+    expect(resposta.body.tipo_habilidade).toBe('OFERTA');
+  });
+
+  it('deve retornar 400 se id_disciplina não for enviado', async () => {
+    const resposta = await request(app).post('/api/skills/oferta').send({});
+
+    expect(resposta.status).toBe(400);
+    expect(skillsService.cadastrarOferta).not.toHaveBeenCalled();
+  });
+});
