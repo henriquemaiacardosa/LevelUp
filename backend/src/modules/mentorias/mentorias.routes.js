@@ -5,5 +5,6 @@ const mentoriasController = require('./mentorias.controller');
 const router = Router();
 
 router.post('/', autenticar, mentoriasController.solicitar);
+router.patch('/:id/status', autenticar, mentoriasController.responder);
 
 module.exports = router;
