@@ -32,4 +32,25 @@ async function solicitarMentoria({ id_aluno, id_tutor, id_disciplina, data_hora 
   });
 }
 
-module.exports = { solicitarMentoria };
+const STATUS_PERMITIDOS = ['CONFIRMADA', 'CANCELADA'];
+
+async function responderSolicitacao({ id_mentoria, id_usuario, status }) {
+  if (!STATUS_PERMITIDOS.includes(status)) {
+    throw erroHttp(400, 'status deve ser CONFIRMADA ou CANCELADA.');
+  }
+
+  const mentoria = await mentoriasRepository.buscarPorId(id_mentoria);
+  if (!mentoria) {
+    throw erroHttp(404, 'Mentoria não encontrada.');
+  }
+  if (mentoria.id_tutor !== id_usuario) {
+    throw erroHttp(403, 'Apenas o tutor da mentoria pode responder à solicitação.');
+  }
+  if (mentoria.status !== 'PENDENTE') {
+    throw erroHttp(409, 'Só é possível responder a mentorias pendentes.');
+  }
+
+  return mentoriasRepository.atualizarStatus(id_mentoria, status);
+}
+
+module.exports = { solicitarMentoria, responderSolicitacao };
