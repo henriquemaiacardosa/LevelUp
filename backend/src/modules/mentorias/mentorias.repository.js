@@ -13,4 +13,12 @@ async function criarMentoria({ id_aluno, id_tutor, id_disciplina, data_hora }) {
   });
 }
 
-module.exports = { tutorOfereceDisciplina, criarMentoria };
+async function buscarPorId(id_mentoria) {
+  return prisma.mentoria.findUnique({ where: { id_mentoria } });
+}
+
+async function atualizarStatus(id_mentoria, status) {
+  return prisma.mentoria.update({ where: { id_mentoria }, data: { status } });
+}
+
+module.exports = { tutorOfereceDisciplina, criarMentoria, buscarPorId, atualizarStatus };
