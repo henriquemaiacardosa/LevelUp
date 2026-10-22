@@ -53,4 +53,33 @@ async function responderSolicitacao({ id_mentoria, id_usuario, status }) {
   return mentoriasRepository.atualizarStatus(id_mentoria, status);
 }
 
-module.exports = { solicitarMentoria, responderSolicitacao };
+function linkValido(link) {
+  if (typeof link !== 'string') return false;
+  try {
+    const url = new URL(link);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch (erro) {
+    return false;
+  }
+}
+
+async function definirLink({ id_mentoria, id_usuario, link_videochamada }) {
+  if (!linkValido(link_videochamada)) {
+    throw erroHttp(400, 'link_videochamada deve ser uma URL http ou https válida.');
+  }
+
+  const mentoria = await mentoriasRepository.buscarPorId(id_mentoria);
+  if (!mentoria) {
+    throw erroHttp(404, 'Mentoria não encontrada.');
+  }
+  if (mentoria.id_tutor !== id_usuario) {
+    throw erroHttp(403, 'Apenas o tutor da mentoria pode definir o link.');
+  }
+  if (mentoria.status !== 'CONFIRMADA') {
+    throw erroHttp(409, 'O link só pode ser definido em mentorias confirmadas.');
+  }
+
+  return mentoriasRepository.atualizarLink(id_mentoria, link_videochamada);
+}
+
+module.exports = { solicitarMentoria, responderSolicitacao, definirLink };

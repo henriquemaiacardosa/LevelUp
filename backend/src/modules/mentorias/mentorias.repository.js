@@ -21,4 +21,8 @@ async function atualizarStatus(id_mentoria, status) {
   return prisma.mentoria.update({ where: { id_mentoria }, data: { status } });
 }
 
-module.exports = { tutorOfereceDisciplina, criarMentoria, buscarPorId, atualizarStatus };
+async function atualizarLink(id_mentoria, link_videochamada) {
+  return prisma.mentoria.update({ where: { id_mentoria }, data: { link_videochamada } });
+}
+
+module.exports = {tutorOfereceDisciplina,criarMentoria,buscarPorId,atualizarStatus,atualizarLink,};
