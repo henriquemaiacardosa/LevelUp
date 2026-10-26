@@ -113,4 +113,25 @@ async function listar(req, res) {
   }
 }
 
-module.exports = { solicitar, responder, definirLink, concluir, listar };
+async function cancelar(req, res) {
+  const id_mentoria = Number(req.params.id);
+
+  if (!Number.isInteger(id_mentoria) || id_mentoria < 1) {
+    return res.status(400).json({ erro: 'Id da mentoria inválido.' });
+  }
+
+  try {
+    const mentoria = await mentoriasService.cancelarMentoria({
+      id_mentoria,
+      id_usuario: req.usuario.id_usuario,
+    });
+    return res.status(200).json(mentoria);
+  } catch (erro) {
+    if (erro.status) {
+      return res.status(erro.status).json({ erro: erro.message });
+    }
+    return res.status(500).json({ erro: 'Erro interno do servidor.' });
+  }
+}
+
+module.exports = { solicitar, responder, definirLink, concluir, listar, cancelar };

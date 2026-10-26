@@ -137,4 +137,26 @@ async function listarMinhasMentorias({ id_usuario, status }) {
   });
 }
 
-module.exports = { solicitarMentoria, responderSolicitacao, definirLink, concluirMentoria, listarMinhasMentorias };
+async function cancelarMentoria({ id_mentoria, id_usuario }) {
+  const mentoria = await mentoriasRepository.buscarPorId(id_mentoria);
+
+  if (!mentoria) {
+    throw erroHttp(404, 'Mentoria não encontrada.');
+  }
+
+  if (mentoria.id_tutor !== id_usuario && mentoria.id_aluno !== id_usuario) {
+    throw erroHttp(403, 'Apenas o tutor ou o aluno da mentoria pode cancelá-la.');
+  }
+
+  if (mentoria.status !== 'CONFIRMADA') {
+    throw erroHttp(409, 'Só é possível cancelar mentorias confirmadas.');
+  }
+
+  if (new Date(mentoria.data_hora) <= new Date()) {
+    throw erroHttp(409, 'A mentoria já começou ou já passou e não pode mais ser cancelada.');
+  }
+
+  return mentoriasRepository.cancelarConfirmada(id_mentoria);
+}
+
+module.exports = { solicitarMentoria, responderSolicitacao, definirLink, concluirMentoria, listarMinhasMentorias, cancelarMentoria };
