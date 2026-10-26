@@ -82,4 +82,31 @@ async function definirLink({ id_mentoria, id_usuario, link_videochamada }) {
   return mentoriasRepository.atualizarLink(id_mentoria, link_videochamada);
 }
 
-module.exports = { solicitarMentoria, responderSolicitacao, definirLink };
+const XP_TUTOR = 50;
+const XP_ALUNO = 20;
+
+async function concluirMentoria({ id_mentoria, id_usuario }) {
+  const mentoria = await mentoriasRepository.buscarPorId(id_mentoria);
+  if (!mentoria) {
+    throw erroHttp(404, 'Mentoria não encontrada.');
+  }
+  if (mentoria.id_tutor !== id_usuario) {
+    throw erroHttp(403, 'Apenas o tutor da mentoria pode concluí-la.');
+  }
+  if (mentoria.status !== 'CONFIRMADA') {
+    throw erroHttp(409, 'Só é possível concluir mentorias confirmadas.');
+  }
+  if (new Date(mentoria.data_hora) > new Date()) {
+    throw erroHttp(409, 'A mentoria ainda não aconteceu.');
+  }
+
+  return mentoriasRepository.concluirComXp({
+    id_mentoria,
+    id_tutor: mentoria.id_tutor,
+    id_aluno: mentoria.id_aluno,
+    xp_tutor: XP_TUTOR,
+    xp_aluno: XP_ALUNO,
+  });
+}
+
+module.exports = { solicitarMentoria, responderSolicitacao, definirLink, concluirMentoria };
