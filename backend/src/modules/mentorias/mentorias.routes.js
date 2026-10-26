@@ -8,5 +8,5 @@ router.post('/', autenticar, mentoriasController.solicitar);
 router.patch('/:id/status', autenticar, mentoriasController.responder);
 router.patch('/:id/link', autenticar, mentoriasController.definirLink);
 router.patch('/:id/concluir', autenticar, mentoriasController.concluir);
-
+router.get('/', autenticar, mentoriasController.listar);
 module.exports = router;
