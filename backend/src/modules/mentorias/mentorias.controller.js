@@ -98,4 +98,19 @@ async function concluir(req, res) {
   }
 }
 
-module.exports = { solicitar, responder, definirLink, concluir };
+async function listar(req, res) {
+  try {
+    const mentorias = await mentoriasService.listarMinhasMentorias({
+      id_usuario: req.usuario.id_usuario,
+      status: req.query.status,
+    });
+    return res.status(200).json(mentorias);
+  } catch (erro) {
+    if (erro.status) {
+      return res.status(erro.status).json({ erro: erro.message });
+    }
+    return res.status(500).json({ erro: 'Erro interno do servidor.' });
+  }
+}
+
+module.exports = { solicitar, responder, definirLink, concluir, listar };

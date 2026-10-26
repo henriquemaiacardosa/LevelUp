@@ -51,5 +51,25 @@ async function concluirComXp({ id_mentoria, id_tutor, id_aluno, xp_tutor, xp_alu
   });
 }
 
-module.exports = {tutorOfereceDisciplina,criarMentoria,buscarPorId,atualizarStatus,atualizarLink,concluirComXp,};
+async function listarPorUsuario({ id_usuario, status }) {
+  return prisma.mentoria.findMany({
+    where: {
+      OR: [{ id_tutor: id_usuario }, { id_aluno: id_usuario }],
+      ...(status ? { status } : {}),
+    },
+    orderBy: { data_hora: 'asc' },
+    select: {
+      id_mentoria: true,
+      id_tutor: true,
+      id_aluno: true,
+      status: true,
+      data_hora: true,
+      link_videochamada: true,
+      tutor: { select: { id_usuario: true, nome: true } },
+      aluno: { select: { id_usuario: true, nome: true } },
+      disciplina: { select: { nome_disciplina: true } },
+    },
+  });
+}
 
+module.exports = {tutorOfereceDisciplina,criarMentoria,buscarPorId,atualizarStatus,atualizarLink,concluirComXp,listarPorUsuario};

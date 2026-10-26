@@ -109,4 +109,32 @@ async function concluirMentoria({ id_mentoria, id_usuario }) {
   });
 }
 
-module.exports = { solicitarMentoria, responderSolicitacao, definirLink, concluirMentoria };
+const STATUS_VALIDOS = ['PENDENTE', 'CONFIRMADA', 'CONCLUIDA', 'CANCELADA'];
+
+async function listarMinhasMentorias({ id_usuario, status }) {
+  if (status !== undefined && !STATUS_VALIDOS.includes(status)) {
+    throw erroHttp(400, 'Status inválido.');
+  }
+
+  const mentorias = await mentoriasRepository.listarPorUsuario({
+    id_usuario,
+    status,
+  });
+
+  return mentorias.map((m) => {
+    const souTutor = m.id_tutor === id_usuario;
+    const outra = souTutor ? m.aluno : m.tutor;
+
+    return {
+      id_mentoria: m.id_mentoria,
+      status: m.status,
+      data_hora: m.data_hora,
+      papel: souTutor ? 'TUTOR' : 'ALUNO',
+      outra_pessoa: { id_usuario: outra.id_usuario, nome: outra.nome },
+      disciplina: m.disciplina.nome_disciplina,
+      link_videochamada: m.status === 'CONFIRMADA' ? m.link_videochamada : null,
+    };
+  });
+}
+
+module.exports = { solicitarMentoria, responderSolicitacao, definirLink, concluirMentoria, listarMinhasMentorias };
