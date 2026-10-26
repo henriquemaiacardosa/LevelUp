@@ -72,4 +72,21 @@ async function listarPorUsuario({ id_usuario, status }) {
   });
 }
 
-module.exports = {tutorOfereceDisciplina,criarMentoria,buscarPorId,atualizarStatus,atualizarLink,concluirComXp,listarPorUsuario};
+async function cancelarConfirmada(id_mentoria) {
+  return prisma.$transaction(async (tx) => {
+    const atualizadas = await tx.mentoria.updateMany({
+      where: { id_mentoria, status: 'CONFIRMADA' },
+      data: { status: 'CANCELADA' },
+    });
+
+    if (atualizadas.count === 0) {
+      const erro = new Error('A mentoria não está mais confirmada.');
+      erro.status = 409;
+      throw erro;
+    }
+
+    return tx.mentoria.findUnique({ where: { id_mentoria } });
+  });
+}
+
+module.exports = {tutorOfereceDisciplina,criarMentoria,buscarPorId,atualizarStatus,atualizarLink,concluirComXp,listarPorUsuario,cancelarConfirmada };
