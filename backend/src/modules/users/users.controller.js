@@ -20,4 +20,16 @@ async function atualizarPerfil(req, res) {
   }
 }
 
-module.exports = { atualizarPerfil };
+async function consultarXp(req, res) {
+  try {
+    const xp = await usersService.consultarXp(req.usuario.id_usuario);
+    return res.status(200).json(xp);
+  } catch (erro) {
+    if (erro.status) {
+      return res.status(erro.status).json({ erro: erro.message });
+    }
+    return res.status(500).json({ erro: 'Erro interno do servidor.' });
+  }
+}
+
+module.exports = { atualizarPerfil, consultarXp };
