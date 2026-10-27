@@ -1,18 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
-import { useAuth } from './auth/AuthContext';
 import Autenticacao from './pages/Autenticacao';
 import RotaProtegida from './routes/RotaProtegida';
+import Layout from './layout/Layout';
 
 function Inicio() {
-  const { sair } = useAuth();
-
-  return (
-    <main>
-      <h1>LevelUp</h1>
-      <p>Você está logado.</p>
-      <button onClick={sair}>Sair</button>
-    </main>
-  );
+  return <h1>Início</h1>;
 }
 
 export default function App() {
@@ -20,7 +12,9 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<Autenticacao />} />
       <Route element={<RotaProtegida />}>
-        <Route path="/" element={<Inicio />} />
+        <Route element={<Layout />}>
+          <Route path="/" element={<Inicio />} />
+        </Route>
       </Route>
     </Routes>
   );

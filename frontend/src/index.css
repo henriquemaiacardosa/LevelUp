@@ -88,6 +88,22 @@ input {
   background: rgb(255 122 136 / 0.1);
 }
 
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.marca__simbolo {
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--ouro);
+  clip-path: polygon(50% 0, 100% 55%, 78% 55%, 78% 100%, 22% 100%, 22% 55%, 0 55%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
