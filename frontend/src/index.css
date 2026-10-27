@@ -104,6 +104,19 @@ input {
   clip-path: polygon(50% 0, 100% 55%, 78% 55%, 78% 100%, 22% 100%, 22% 55%, 0 55%);
 }
 
+a.botao {
+  text-decoration: none;
+}
+
+.botao--ciano {
+  background: var(--ciano);
+  color: #05222a;
+}
+
+.botao--ciano:hover:not(:disabled) {
+  background: #8be6f2;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
