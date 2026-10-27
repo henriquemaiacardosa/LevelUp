@@ -25,4 +25,22 @@ async function consultarXp(id_usuario) {
   };
 }
 
-module.exports = { atualizarPerfil, consultarXp};
+async function obterPerfil(id_usuario) {
+  const usuario = await usersRepository.buscarPerfilPorId(id_usuario);
+
+  if (!usuario) {
+    const erro = new Error('Usuário não encontrado.');
+    erro.status = 404;
+    throw erro;
+  }
+
+  return {
+    id_usuario: usuario.id_usuario,
+    nome: usuario.nome,
+    email: usuario.email,
+    curso: usuario.curso,
+    semestre: usuario.semestre,
+  };
+}
+
+module.exports = { atualizarPerfil, consultarXp, obterPerfil };
