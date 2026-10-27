@@ -33,7 +33,7 @@ export async function api(caminho, { method = 'GET', body } = {}) {
     throw new ApiError(0, 'Não foi possível conectar ao servidor.');
   }
 
-  let corpo = null;
+  let corpo;
   try {
     corpo = await resposta.json();
   } catch {
