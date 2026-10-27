@@ -1,0 +1,96 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--noite);
+  color: var(--nevoa);
+  font-family: var(--fonte-texto);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ouro);
+  outline-offset: 2px;
+}
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0 1.75rem;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  clip-path: var(--forma-botao);
+}
+
+.botao--primario {
+  background: var(--ouro);
+  color: var(--ouro-tinta);
+}
+
+.botao--primario:hover:not(:disabled) {
+  background: var(--ouro-claro);
+}
+
+/* o clip-path corta o contorno externo, então o foco é desenhado por dentro */
+.botao:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--ouro-tinta), inset 0 0 0 4px var(--nevoa);
+}
+
+.botao:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.painel {
+  padding: 1px;
+  background: var(--linha);
+  clip-path: var(--forma-painel);
+}
+
+.painel__conteudo {
+  background: var(--painel);
+  clip-path: var(--forma-painel-interno);
+}
+
+.aviso {
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--perigo);
+  background: rgb(255 122 136 / 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
