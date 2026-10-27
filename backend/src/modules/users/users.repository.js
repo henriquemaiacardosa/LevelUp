@@ -21,4 +21,17 @@ async function buscarXpPorId(id_usuario) {
   });
 }
 
-module.exports = { atualizarPerfil, buscarXpPorId };
+async function buscarPerfilPorId(id_usuario) {
+  return prisma.usuario.findUnique({
+    where: { id_usuario },
+    select: {
+      id_usuario: true,
+      nome: true,
+      email: true,
+      curso: true,
+      semestre: true,
+    },
+  });
+}
+
+module.exports = { atualizarPerfil, buscarXpPorId, buscarPerfilPorId };
