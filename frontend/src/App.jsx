@@ -3,6 +3,7 @@ import Autenticacao from './pages/Autenticacao';
 import Inicio from './pages/Inicio';
 import RotaProtegida from './routes/RotaProtegida';
 import Layout from './layout/Layout';
+import Busca from './pages/Busca';
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
       <Route element={<RotaProtegida />}>
         <Route element={<Layout />}>
           <Route path="/" element={<Inicio />} />
+          <Route path="/buscar" element={<Busca />} />
         </Route>
       </Route>
     </Routes>
