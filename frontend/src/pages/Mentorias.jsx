@@ -40,7 +40,111 @@ function Videochamada({ link }) {
   );
 }
 
-function ItemMentoria({ mentoria }) {
+function Acoes({ mentoria, ocupado, onAcao }) {
+  const [linkDigitado, setLinkDigitado] = useState(mentoria.link_videochamada ?? '');
+  const ensina = mentoria.papel === 'TUTOR';
+  const base = `/mentorias/${mentoria.id_mentoria}`;
+
+  const cancelar = (
+    <button
+      type="button"
+      className="botao-acao botao-acao--perigo"
+      disabled={ocupado}
+      onClick={() => onAcao(`${base}/cancelar`, { method: 'PATCH' }, 'Mentoria cancelada.')}
+    >
+      Cancelar mentoria
+    </button>
+  );
+
+  if (mentoria.status === 'PENDENTE') {
+    if (!ensina) {
+      return <p className="mentoria__detalhe">Aguardando resposta do tutor.</p>;
+    }
+
+    return (
+      <div className="mentoria__acoes">
+        <button
+          type="button"
+          className="botao botao--primario"
+          disabled={ocupado}
+          onClick={() =>
+            onAcao(`${base}/status`, { method: 'PATCH', body: { status: 'CONFIRMADA' } }, 'Mentoria aceita.')
+          }
+        >
+          Aceitar
+        </button>
+        <button
+          type="button"
+          className="botao-acao botao-acao--perigo"
+          disabled={ocupado}
+          onClick={() =>
+            onAcao(`${base}/status`, { method: 'PATCH', body: { status: 'CANCELADA' } }, 'Mentoria recusada.')
+          }
+        >
+          Recusar
+        </button>
+      </div>
+    );
+  }
+
+  if (mentoria.status === 'CONFIRMADA') {
+    if (!ensina) {
+      return (
+        <div className="mentoria__acoes">
+          <Videochamada link={mentoria.link_videochamada} />
+          {cancelar}
+        </div>
+      );
+    }
+
+    return (
+      <div className="mentoria__acoes mentoria__acoes--tutor">
+        <div className="campo">
+          <label className="campo__rotulo" htmlFor={`link-${mentoria.id_mentoria}`}>
+            Link da videochamada
+          </label>
+          <input
+            id={`link-${mentoria.id_mentoria}`}
+            className="campo__entrada"
+            type="url"
+            value={linkDigitado}
+            onChange={(e) => setLinkDigitado(e.target.value)}
+            placeholder="https://meet.google.com/…"
+          />
+        </div>
+        <div className="mentoria__botoes">
+          <button
+            type="button"
+            className="botao botao--ciano"
+            disabled={ocupado || linkDigitado.trim() === ''}
+            onClick={() =>
+              onAcao(
+                `${base}/link`,
+                { method: 'PATCH', body: { link_videochamada: linkDigitado.trim() } },
+                'Link salvo.',
+              )
+            }
+          >
+            Salvar link
+          </button>
+          <button
+            type="button"
+            className="botao botao--primario"
+            disabled={ocupado}
+            onClick={() => onAcao(`${base}/concluir`, { method: 'PATCH' }, 'Mentoria concluída.')}
+          >
+            Concluir mentoria
+          </button>
+          {cancelar}
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+function ItemMentoria({ mentoria, ocupado, onAcao }) {
   const ensina = mentoria.papel === 'TUTOR';
   const frase = ensina
     ? `Você ensina ${mentoria.outra_pessoa.nome}`
@@ -57,9 +161,7 @@ function ItemMentoria({ mentoria }) {
           </time>
         </p>
       </div>
-      {mentoria.status === 'CONFIRMADA' && !ensina && (
-        <Videochamada link={mentoria.link_videochamada} />
-      )}
+      <Acoes mentoria={mentoria} ocupado={ocupado} onAcao={onAcao} />
     </li>
   );
 }
@@ -69,6 +171,9 @@ export default function Mentorias() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
   const [abaAtiva, setAbaAtiva] = useState('PENDENTE');
+  const [ocupado, setOcupado] = useState(false);
+  const [mensagem, setMensagem] = useState('');
+  const [erroAcao, setErroAcao] = useState('');
 
   useEffect(() => {
     let ativo = true;
@@ -90,6 +195,22 @@ export default function Mentorias() {
     };
   }, []);
 
+  async function executarAcao(caminho, opcoes, sucesso) {
+    setOcupado(true);
+    setMensagem('');
+    setErroAcao('');
+
+    try {
+      await api(caminho, opcoes);
+      setMensagem(sucesso);
+      setMentorias(await api('/mentorias'));
+    } catch (e) {
+      setErroAcao(e.message);
+    } finally {
+      setOcupado(false);
+    }
+  }
+
   const contagem = (status) => mentorias.filter((m) => m.status === status).length;
   const visiveis = mentorias.filter((m) => m.status === abaAtiva);
 
@@ -105,6 +226,18 @@ export default function Mentorias() {
       {erro && (
         <p className="aviso" role="alert">
           {erro}
+        </p>
+      )}
+
+      {mensagem && (
+        <p className="mentorias__ok" role="status">
+          {mensagem}
+        </p>
+      )}
+
+      {erroAcao && (
+        <p className="aviso" role="alert">
+          {erroAcao}
         </p>
       )}
 
@@ -133,7 +266,12 @@ export default function Mentorias() {
             ) : (
               <ul className="mentorias__lista">
                 {visiveis.map((m) => (
-                  <ItemMentoria key={m.id_mentoria} mentoria={m} />
+                  <ItemMentoria
+                    key={m.id_mentoria}
+                    mentoria={m}
+                    ocupado={ocupado}
+                    onAcao={executarAcao}
+                  />
                 ))}
               </ul>
             )}
