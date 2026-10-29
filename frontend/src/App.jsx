@@ -4,6 +4,7 @@ import Inicio from './pages/Inicio';
 import RotaProtegida from './routes/RotaProtegida';
 import Layout from './layout/Layout';
 import Busca from './pages/Busca';
+import Mentorias from './pages/Mentorias';
 
 export default function App() {
   return (
@@ -13,6 +14,8 @@ export default function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Inicio />} />
           <Route path="/buscar" element={<Busca />} />
+          <Route path="/buscar" element={<Busca />} />
+          <Route path="/mentorias" element={<Mentorias />} />
         </Route>
       </Route>
     </Routes>

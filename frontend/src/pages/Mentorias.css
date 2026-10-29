@@ -1,0 +1,89 @@
+.mentorias {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.mentorias__titulo {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 1rem + 2.5vw, 2.5rem);
+  line-height: 1.1;
+}
+
+.mentorias__texto {
+  margin-top: 0.5rem;
+  color: var(--nevoa-fraca);
+}
+
+.mentorias__vazio {
+  padding: 1.5rem;
+  background: var(--painel);
+  border: 1px dashed var(--linha);
+  color: var(--nevoa-fraca);
+}
+
+.abas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.aba {
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  background: var(--painel);
+  border: 1px solid var(--linha);
+  color: var(--nevoa-fraca);
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.aba:hover {
+  color: var(--nevoa);
+}
+
+.aba[aria-selected='true'] {
+  border-color: var(--ouro);
+  color: var(--ouro);
+}
+
+.aba:focus-visible {
+  outline: 2px solid var(--ciano);
+  outline-offset: -4px;
+}
+
+.mentorias__lista {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mentoria {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--painel);
+  border: 1px solid var(--linha);
+  border-left: 4px solid var(--ouro);
+}
+
+.mentoria--aprende {
+  border-left-color: var(--ciano);
+}
+
+.mentoria__disciplina {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.1875rem;
+}
+
+.mentoria__detalhe {
+  color: var(--nevoa-fraca);
+  font-size: 0.9375rem;
+}
