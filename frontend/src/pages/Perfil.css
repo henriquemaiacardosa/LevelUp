@@ -30,6 +30,16 @@
 .perfil__dados .painel__conteudo {
   display: grid;
   gap: 1rem;
+  justify-items: start;
+  padding: 1.5rem;
+}
+
+.perfil__dados .perfil__texto {
+  margin-top: -0.75rem;
+}
+
+.perfil__dados .perfil__campos {
+  width: 100%;
 }
 
 .perfil__campos {
