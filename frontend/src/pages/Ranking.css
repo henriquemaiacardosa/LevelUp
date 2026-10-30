@@ -1,0 +1,118 @@
+.ranking {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.ranking__titulo {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 1rem + 2.5vw, 2.5rem);
+  line-height: 1.1;
+}
+
+.ranking__texto {
+  margin-top: 0.5rem;
+  color: var(--nevoa-fraca);
+}
+
+.ranking__vazio {
+  padding: 1.5rem;
+  background: var(--painel);
+  border: 1px dashed var(--linha);
+  color: var(--nevoa-fraca);
+}
+
+.ranking__voce {
+  padding: 0.85rem 1rem;
+  background: var(--painel);
+  border-left: 4px solid var(--nevoa);
+  font-weight: 600;
+}
+
+.podio,
+.demais {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.posicao {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--painel);
+  border: 1px solid var(--linha);
+}
+
+.posicao__numero {
+  min-width: 2.5rem;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.375rem;
+}
+
+.posicao__nome {
+  flex: 1;
+  font-weight: 600;
+}
+
+.posicao__xp {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  color: var(--nevoa-fraca);
+}
+
+.posicao__selo {
+  padding: 0.15rem 0.6rem;
+  border: 1px solid var(--ouro);
+  color: var(--ouro);
+  font-family: var(--fonte-titulo);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.posicao--voce {
+  border-color: var(--ouro);
+}
+
+/* Pódio: o 1º lugar ganha destaque; em telas largas fica no centro (2º, 1º, 3º) */
+.podio .posicao {
+  border-top: 4px solid var(--linha);
+}
+
+.podio .posicao:first-child {
+  border-top-color: var(--nevoa);
+  padding-block: 1.5rem;
+}
+
+.podio .posicao:first-child .posicao__numero {
+  font-size: 2rem;
+}
+
+@media (min-width: 48rem) {
+  .podio {
+    grid-template-columns: repeat(3, 1fr);
+    align-items: end;
+  }
+
+  .podio .posicao {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .podio .posicao:nth-child(1) {
+    order: 2;
+  }
+
+  .podio .posicao:nth-child(2) {
+    order: 1;
+  }
+
+  .podio .posicao:nth-child(3) {
+    order: 3;
+  }
+}
