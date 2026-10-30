@@ -6,6 +6,8 @@ import Layout from './layout/Layout';
 import Busca from './pages/Busca';
 import Mentorias from './pages/Mentorias';
 import Ranking from './pages/Ranking';
+import Perfil from './pages/Perfil';
+
 
 
 export default function App() {
@@ -18,6 +20,7 @@ export default function App() {
           <Route path="/buscar" element={<Busca />} />
           <Route path="/mentorias" element={<Mentorias />} />
           <Route path="/ranking" element={<Ranking />} />
+            <Route path="/perfil" element={<Perfil />} />
         </Route>
       </Route>
     </Routes>
