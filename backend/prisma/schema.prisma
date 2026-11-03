@@ -25,6 +25,7 @@ model Usuario {
   criado_em      DateTime @default(now())
 
   habilidades       Inventario_Habilidades[]
+  disponibilidades  Disponibilidade[]
   mentorias_aluno   Mentoria[]                @relation("Aprendiz")
   mentorias_tutor   Mentoria[]                @relation("Tutoria")
 
@@ -82,4 +83,32 @@ model Mentoria {
   disciplina Disciplina @relation(fields: [id_disciplina], references: [id_disciplina])
 
   @@map("Mentoria")
+}
+
+enum DiaSemana {
+  SEGUNDA
+  TERCA
+  QUARTA
+  QUINTA
+  SEXTA
+  SABADO
+  DOMINGO
+}
+
+enum Turno {
+  MANHA
+  TARDE
+  NOITE
+}
+
+model Disponibilidade {
+  id_disponibilidade Int       @id @default(autoincrement())
+  id_usuario         Int
+  dia_semana         DiaSemana
+  turno              Turno
+
+  usuario Usuario @relation(fields: [id_usuario], references: [id_usuario])
+
+  @@unique([id_usuario, dia_semana, turno])
+  @@map("Disponibilidade")
 }
