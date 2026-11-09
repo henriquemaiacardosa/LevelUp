@@ -6,6 +6,8 @@ const matchmakingRoutes = require('../modules/matchmaking/matchmaking.routes');
 const mentoriasRoutes = require('../modules/mentorias/mentorias.routes');
 const leaderboardRoutes = require('../modules/leaderboard/leaderboard.routes');
 const disciplinasRoutes = require('../modules/disciplinas/disciplinas.routes');
+const disponibilidadeRoutes = require('../modules/disponibilidade/disponibilidade.routes');
+
 
 const router = express.Router();
 
@@ -16,5 +18,6 @@ router.use('/matchmaking', matchmakingRoutes);
 router.use('/mentorias', mentoriasRoutes);
 router.use('/leaderboard', leaderboardRoutes);
 router.use('/disciplinas', disciplinasRoutes);
+router.use('/disponibilidade', disponibilidadeRoutes);
 
 module.exports = router;
