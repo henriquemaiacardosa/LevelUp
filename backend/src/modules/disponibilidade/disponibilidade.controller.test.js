@@ -138,3 +138,77 @@ describe('PUT /api/disponibilidade', () => {
     expect(res.body).toEqual({ erro: 'Erro interno do servidor.' });
   });
 });
+
+describe('PUT /api/disponibilidade - sem corpo', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('sem corpo repassa undefined ao service e devolve o 400 dele', async () => {
+    const erro = new Error('Informe a lista de disponibilidade.');
+    erro.status = 400;
+    disponibilidadeService.salvarMinhaDisponibilidade.mockRejectedValue(erro);
+
+    const res = await request(app)
+      .put('/api/disponibilidade')
+      .set('Authorization', `Bearer ${gerarToken(7)}`);
+
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({ erro: 'Informe a lista de disponibilidade.' });
+    expect(disponibilidadeService.salvarMinhaDisponibilidade).toHaveBeenCalledWith(
+      7,
+      undefined
+    );
+  });
+});
+
+describe('disponibilidade.controller - registro de erros', () => {
+  let consoleErro;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    consoleErro = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    consoleErro.mockRestore();
+  });
+
+  test('GET registra o erro inesperado antes de devolver 500', async () => {
+    const falha = new Error('falha do banco');
+    disponibilidadeService.listarMinhaDisponibilidade.mockRejectedValue(falha);
+
+    const res = await request(app)
+      .get('/api/disponibilidade')
+      .set('Authorization', `Bearer ${gerarToken(7)}`);
+
+    expect(res.status).toBe(500);
+    expect(consoleErro).toHaveBeenCalledWith(falha);
+  });
+
+  test('PUT registra o erro inesperado antes de devolver 500', async () => {
+    const falha = new Error('falha do banco');
+    disponibilidadeService.salvarMinhaDisponibilidade.mockRejectedValue(falha);
+
+    const res = await request(app)
+      .put('/api/disponibilidade')
+      .set('Authorization', `Bearer ${gerarToken(7)}`)
+      .send({ disponibilidade: [] });
+
+    expect(res.status).toBe(500);
+    expect(consoleErro).toHaveBeenCalledWith(falha);
+  });
+
+  test('erro de negócio (com status) não é registrado como erro do servidor', async () => {
+    const erro = new Error('Turno inválido.');
+    erro.status = 400;
+    disponibilidadeService.salvarMinhaDisponibilidade.mockRejectedValue(erro);
+
+    await request(app)
+      .put('/api/disponibilidade')
+      .set('Authorization', `Bearer ${gerarToken(7)}`)
+      .send({ disponibilidade: [] });
+
+    expect(consoleErro).not.toHaveBeenCalled();
+  });
+});
