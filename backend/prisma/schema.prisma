@@ -107,7 +107,7 @@ model Disponibilidade {
   dia_semana         DiaSemana
   turno              Turno
 
-  usuario Usuario @relation(fields: [id_usuario], references: [id_usuario])
+  usuario Usuario @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
 
   @@unique([id_usuario, dia_semana, turno])
   @@map("Disponibilidade")
