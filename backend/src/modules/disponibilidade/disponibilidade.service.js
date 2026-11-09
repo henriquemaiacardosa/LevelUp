@@ -1,7 +1,9 @@
 const repository = require('./disponibilidade.repository');
 
-const DIAS = ['SEGUNDA', 'TERCA', 'QUARTA', 'QUINTA', 'SEXTA', 'SABADO', 'DOMINGO'];
-const TURNOS = ['MANHA', 'TARDE', 'NOITE'];
+const { DiaSemana, Turno } = require('@prisma/client');
+
+const DIAS = Object.values(DiaSemana);
+const TURNOS = Object.values(Turno);
 
 function erro(status, mensagem) {
   const e = new Error(mensagem);
@@ -33,6 +35,8 @@ async function salvarMinhaDisponibilidade(id_usuario, disponibilidade) {
     if (!TURNOS.includes(turno)) throw erro(400, 'Turno inválido.');
 
     const chave = `${dia_semana}:${turno}`;
+    // Duplicados são descartados de propósito: o PUT define o conjunto inteiro,
+    // então repetir um item não muda o resultado.
     if (vistos.has(chave)) continue;
 
     vistos.add(chave);
