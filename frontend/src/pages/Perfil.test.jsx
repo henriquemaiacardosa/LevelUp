@@ -24,13 +24,21 @@ const SKILLS = {
   demanda: [],
 };
 
-function configurarApi({ perfil = PERFIL, skills = SKILLS, escrita = () => Promise.resolve({}) } = {}) {
-  const estado = { perfil, skills };
+function configurarApi({
+  perfil = PERFIL,
+  skills = SKILLS,
+  disponibilidade = [],
+  escrita = () => Promise.resolve({}),
+} = {}) {
+  const estado = { perfil, skills, disponibilidade };
   api.mockImplementation((caminho, opcoes) => {
     if (opcoes && opcoes.method) return escrita(caminho, opcoes);
     if (caminho === '/users/perfil') return Promise.resolve(estado.perfil);
     if (caminho === '/skills') return Promise.resolve(estado.skills);
     if (caminho === '/disciplinas') return Promise.resolve(DISCIPLINAS);
+    if (caminho === '/disponibilidade') {
+      return Promise.resolve({ disponibilidade: estado.disponibilidade });
+    }
     return Promise.reject(new Error(`caminho inesperado: ${caminho}`));
   });
   return estado;
@@ -216,5 +224,95 @@ describe('Perfil - habilidades', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Adicionar ao que eu ensino' }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Habilidade já cadastrada.');
+  });
+});
+
+describe('Perfil - disponibilidade', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  const botaoHorario = (dia, turno) =>
+    screen.getByRole('button', { name: `${dia}, ${turno}` });
+
+  test('busca a disponibilidade junto com os demais dados', async () => {
+    await renderizar();
+
+    expect(api).toHaveBeenCalledWith('/disponibilidade');
+  });
+
+  test('mostra o quadro com 21 horários, todos desmarcados quando não há nenhum', async () => {
+    await renderizar();
+
+    const quadro = screen.getByRole('group', { name: 'Disponibilidade para ensinar' });
+    const botoes = within(quadro).getAllByRole('button');
+    expect(botoes).toHaveLength(21);
+    botoes.forEach((botao) => expect(botao).toHaveAttribute('aria-pressed', 'false'));
+  });
+
+  test('marca os horários que vieram do backend', async () => {
+    await renderizar({
+      disponibilidade: [
+        { dia_semana: 'SEGUNDA', turno: 'NOITE' },
+        { dia_semana: 'SABADO', turno: 'MANHA' },
+      ],
+    });
+
+    expect(botaoHorario('Segunda', 'noite')).toHaveAttribute('aria-pressed', 'true');
+    expect(botaoHorario('Sábado', 'manhã')).toHaveAttribute('aria-pressed', 'true');
+    expect(botaoHorario('Segunda', 'manhã')).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  test('clicar em um horário marca e clicar de novo desmarca', async () => {
+    await renderizar();
+
+    await userEvent.click(botaoHorario('Terça', 'tarde'));
+    expect(botaoHorario('Terça', 'tarde')).toHaveAttribute('aria-pressed', 'true');
+
+    await userEvent.click(botaoHorario('Terça', 'tarde'));
+    expect(botaoHorario('Terça', 'tarde')).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  test('salvar envia o conjunto marcado em ordem de dia e turno e avisa', async () => {
+    await renderizar();
+
+    await userEvent.click(botaoHorario('Quarta', 'tarde'));
+    await userEvent.click(botaoHorario('Segunda', 'noite'));
+    await userEvent.click(botaoHorario('Segunda', 'manhã'));
+    await userEvent.click(screen.getByRole('button', { name: 'Salvar disponibilidade' }));
+
+    expect(api).toHaveBeenCalledWith('/disponibilidade', {
+      method: 'PUT',
+      body: {
+        disponibilidade: [
+          { dia_semana: 'SEGUNDA', turno: 'MANHA' },
+          { dia_semana: 'SEGUNDA', turno: 'NOITE' },
+          { dia_semana: 'QUARTA', turno: 'TARDE' },
+        ],
+      },
+    });
+    expect(await screen.findByRole('status')).toHaveTextContent('Disponibilidade salva.');
+  });
+
+  test('desmarcar tudo e salvar envia a lista vazia', async () => {
+    await renderizar({ disponibilidade: [{ dia_semana: 'DOMINGO', turno: 'TARDE' }] });
+
+    await userEvent.click(botaoHorario('Domingo', 'tarde'));
+    await userEvent.click(screen.getByRole('button', { name: 'Salvar disponibilidade' }));
+
+    expect(api).toHaveBeenCalledWith('/disponibilidade', {
+      method: 'PUT',
+      body: { disponibilidade: [] },
+    });
+  });
+
+  test('erro ao salvar mostra a mensagem do backend e mantém o que foi marcado', async () => {
+    await renderizar({ escrita: () => Promise.reject(new Error('Turno inválido.')) });
+
+    await userEvent.click(botaoHorario('Sexta', 'noite'));
+    await userEvent.click(screen.getByRole('button', { name: 'Salvar disponibilidade' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Turno inválido.');
+    expect(botaoHorario('Sexta', 'noite')).toHaveAttribute('aria-pressed', 'true');
   });
 });
