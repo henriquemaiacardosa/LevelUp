@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { api } from '../services/api';
 import './Perfil.css';
 
@@ -71,6 +71,72 @@ function BlocoHabilidade({
   );
 }
 
+const DIAS = [
+  { valor: 'SEGUNDA', rotulo: 'Segunda' },
+  { valor: 'TERCA', rotulo: 'Terça' },
+  { valor: 'QUARTA', rotulo: 'Quarta' },
+  { valor: 'QUINTA', rotulo: 'Quinta' },
+  { valor: 'SEXTA', rotulo: 'Sexta' },
+  { valor: 'SABADO', rotulo: 'Sábado' },
+  { valor: 'DOMINGO', rotulo: 'Domingo' },
+];
+
+const TURNOS = [
+  { valor: 'MANHA', rotulo: 'manhã' },
+  { valor: 'TARDE', rotulo: 'tarde' },
+  { valor: 'NOITE', rotulo: 'noite' },
+];
+
+function QuadroDisponibilidade({ marcados, ocupado, onAlternar, onSalvar }) {
+  return (
+    <form className="painel disponibilidade" onSubmit={onSalvar}>
+      <div className="painel__conteudo">
+        <fieldset className="disponibilidade__quadro">
+          <legend className="disponibilidade__titulo">Disponibilidade para ensinar</legend>
+          <p className="perfil__texto">
+            Marque os dias e turnos em que você pode receber pedidos de mentoria.
+          </p>
+
+          <div className="disponibilidade__grade">
+            <span aria-hidden="true" />
+            {TURNOS.map((turno) => (
+              <span key={turno.valor} className="disponibilidade__cabecalho" aria-hidden="true">
+                {turno.rotulo}
+              </span>
+            ))}
+
+            {DIAS.map((dia) => (
+              <Fragment key={dia.valor}>
+                <span className="disponibilidade__dia" aria-hidden="true">
+                  {dia.rotulo}
+                </span>
+                {TURNOS.map((turno) => {
+                  const chave = `${dia.valor}:${turno.valor}`;
+                  const marcado = marcados.has(chave);
+                  return (
+                    <button
+                      key={chave}
+                      type="button"
+                      className={`disponibilidade__celula${marcado ? ' disponibilidade__celula--marcada' : ''}`}
+                      aria-pressed={marcado}
+                      aria-label={`${dia.rotulo}, ${turno.rotulo}`}
+                      onClick={() => onAlternar(chave)}
+                    />
+                  );
+                })}
+              </Fragment>
+            ))}
+          </div>
+        </fieldset>
+
+        <button type="submit" className="botao botao--primario" disabled={ocupado}>
+          Salvar disponibilidade
+        </button>
+      </div>
+    </form>
+  );
+}
+
 export default function Perfil() {
   const [perfil, setPerfil] = useState(null);
   const [curso, setCurso] = useState('');
@@ -82,23 +148,31 @@ export default function Perfil() {
   const [ocupado, setOcupado] = useState(false);
   const [mensagem, setMensagem] = useState('');
   const [erroAcao, setErroAcao] = useState('');
+  const [disponibilidade, setDisponibilidade] = useState(new Set());
 
   useEffect(() => {
     let ativo = true;
 
     async function carregar() {
       try {
-        const [dadosPerfil, dadosSkills, dadosDisciplinas] = await Promise.all([
-          api('/users/perfil'),
-          api('/skills'),
-          api('/disciplinas'),
-        ]);
+        const [dadosPerfil, dadosSkills, dadosDisciplinas, dadosDisponibilidade] =
+          await Promise.all([
+            api('/users/perfil'),
+            api('/skills'),
+            api('/disciplinas'),
+            api('/disponibilidade'),
+          ]);
         if (!ativo) return;
         setPerfil(dadosPerfil);
         setCurso(dadosPerfil.curso ?? '');
         setSemestre(dadosPerfil.semestre === null ? '' : String(dadosPerfil.semestre));
         setSkills(dadosSkills);
         setDisciplinas(dadosDisciplinas);
+        setDisponibilidade(
+          new Set(
+            dadosDisponibilidade.disponibilidade.map((item) => `${item.dia_semana}:${item.turno}`),
+          ),
+        );
       } catch (e) {
         if (ativo) setErro(e.message);
       } finally {
@@ -147,6 +221,29 @@ export default function Perfil() {
         await api(`/skills/${tipo}`, { method: 'POST', body: { id_disciplina } });
         setSkills(await api('/skills'));
       }, 'Disciplina adicionada.');
+  }
+
+  function alternarHorario(chave) {
+    setDisponibilidade((atual) => {
+      const proximo = new Set(atual);
+      if (proximo.has(chave)) proximo.delete(chave);
+      else proximo.add(chave);
+      return proximo;
+    });
+  }
+
+  function salvarDisponibilidade(evento) {
+    evento.preventDefault();
+    const itens = DIAS.flatMap((dia) =>
+      TURNOS.filter((turno) => disponibilidade.has(`${dia.valor}:${turno.valor}`)).map(
+        (turno) => ({ dia_semana: dia.valor, turno: turno.valor }),
+      ),
+    );
+
+    return executar(
+      () => api('/disponibilidade', { method: 'PUT', body: { disponibilidade: itens } }),
+      'Disponibilidade salva.',
+    );
   }
 
   const perfilValido = curso.trim() !== '' && semestre !== '';
@@ -250,6 +347,12 @@ export default function Perfil() {
               onAdicionar={adicionar('demanda')}
             />
           </div>
+          <QuadroDisponibilidade
+            marcados={disponibilidade}
+            ocupado={ocupado}
+            onAlternar={alternarHorario}
+            onSalvar={salvarDisponibilidade}
+          />
         </>
       )}
     </section>
