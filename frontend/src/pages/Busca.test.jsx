@@ -158,4 +158,18 @@ describe('Busca', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('A data da mentoria deve ser futura.');
     expect(screen.getByLabelText('Data e hora')).toBeInTheDocument();
   });
+
+    test('cada cartão tem um link para os detalhes do tutor', async () => {
+    prepararApi();
+    renderizar();
+    await buscarProgramacao();
+
+    expect(
+      await screen.findByRole('link', { name: 'Ver detalhes de Tutor Teste' })
+    ).toHaveAttribute('href', '/tutores/11');
+    expect(screen.getByRole('link', { name: 'Ver detalhes de Ana' })).toHaveAttribute(
+      'href',
+      '/tutores/13'
+    );
+  });
 });
