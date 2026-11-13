@@ -193,6 +193,13 @@ export default function Busca() {
                   Solicitar mentoria
                 </button>
               )}
+              <Link
+                to={`/tutores/${tutor.id_usuario}`}
+                className="busca__link"
+                aria-label={`Ver detalhes de ${tutor.nome}`}
+              >
+                Ver detalhes
+              </Link>
             </li>
           ))}
         </ul>
