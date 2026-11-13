@@ -119,3 +119,78 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.disponibilidade .painel__conteudo {
+  display: grid;
+  gap: 1.25rem;
+  justify-items: start;
+  padding: 1.5rem;
+}
+
+.disponibilidade__quadro {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.disponibilidade__titulo {
+  padding: 0;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.1875rem;
+}
+
+.disponibilidade__grade {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, auto) repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  align-items: center;
+  max-width: 28rem;
+  margin-top: 1.25rem;
+}
+
+.disponibilidade__cabecalho {
+  color: var(--nevoa-fraca);
+  font-size: 0.875rem;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.disponibilidade__dia {
+  font-weight: 600;
+}
+
+.disponibilidade__celula {
+  min-height: 2.75rem;
+  background: var(--noite);
+  border: 1px solid var(--linha);
+  color: var(--ouro);
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.disponibilidade__celula:hover {
+  border-color: var(--ouro);
+}
+
+.disponibilidade__celula:focus-visible {
+  outline: 2px solid var(--ouro-claro);
+  outline-offset: 2px;
+}
+
+.disponibilidade__celula--marcada {
+  background: rgb(245 184 61 / 0.18);
+  border-color: var(--ouro);
+}
+
+.disponibilidade__celula--marcada::after {
+  content: '✓';
+}
+
+.disponibilidade button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
