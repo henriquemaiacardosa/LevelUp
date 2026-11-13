@@ -1,0 +1,99 @@
+.tutor-detalhes {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.tutor-detalhes__voltar {
+  justify-self: start;
+  color: var(--ouro);
+  font-weight: 600;
+}
+
+.tutor-detalhes__texto {
+  color: var(--nevoa-fraca);
+}
+
+.tutor-detalhes__resumo {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.5rem;
+}
+
+.tutor-detalhes__cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.tutor-detalhes__inicial {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 3.5rem;
+  height: 3.5rem;
+  background: rgb(245 184 61 / 0.15);
+  border: 1px solid var(--ouro);
+  color: var(--ouro);
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.tutor-detalhes__nome {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 1rem + 2vw, 2rem);
+  line-height: 1.1;
+}
+
+.tutor-detalhes__pontos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1.5rem;
+}
+
+.tutor-detalhes__nivel {
+  color: var(--ouro);
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.tutor-detalhes__secao {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: var(--painel);
+  border: 1px solid var(--linha);
+  border-left: 4px solid var(--ouro);
+}
+
+.tutor-detalhes__titulo {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.1875rem;
+}
+
+.tutor-detalhes__lista,
+.tutor-detalhes__horarios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tutor-detalhes__disciplina {
+  padding: 0.35rem 0.8rem;
+  background: rgb(245 184 61 / 0.12);
+  border: 1px solid var(--ouro);
+  font-weight: 600;
+}
+
+.tutor-detalhes__horario {
+  padding: 0.4rem 0.8rem;
+  background: var(--noite);
+  border: 1px solid var(--linha);
+}
