@@ -189,7 +189,7 @@ export default function Mentorias() {
       }
     }
 
-    carregar();
+    void carregar();
     return () => {
       ativo = false;
     };

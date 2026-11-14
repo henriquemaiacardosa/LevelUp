@@ -34,7 +34,7 @@ export default function Ranking() {
       }
     }
 
-    carregar();
+    void carregar();
     return () => {
       ativo = false;
     };
