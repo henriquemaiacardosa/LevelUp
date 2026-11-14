@@ -18,4 +18,10 @@ async function listarPorUsuario(id_usuario) {
   });
 }
 
-module.exports = { criarHabilidade, listarPorUsuario };
+async function removerDoUsuario(id_usuario, id_habilidade) {
+  return prisma.inventario_Habilidades.deleteMany({
+    where: { id_habilidade, id_usuario },
+  });
+}
+
+module.exports = { criarHabilidade, listarPorUsuario, removerDoUsuario };

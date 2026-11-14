@@ -37,4 +37,22 @@ async function listarMinhasHabilidades(id_usuario) {
   return resultado;
 }
 
-module.exports = { cadastrarDemanda, cadastrarOferta, listarMinhasHabilidades };
+async function removerHabilidade(id_usuario, id_habilidade) {
+  const id = Number(id_habilidade);
+
+  if (!Number.isInteger(id) || id < 1) {
+    const erro = new Error('Identificador da habilidade inválido.');
+    erro.status = 400;
+    throw erro;
+  }
+
+  const { count } = await skillsRepository.removerDoUsuario(id_usuario, id);
+
+  if (count === 0) {
+    const erro = new Error('Habilidade não encontrada.');
+    erro.status = 404;
+    throw erro;
+  }
+}
+
+module.exports = { cadastrarDemanda, cadastrarOferta, listarMinhasHabilidades, removerHabilidade   };

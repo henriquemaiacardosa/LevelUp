@@ -44,4 +44,17 @@ async function listar(req, res) {
   }
 }
 
-module.exports = { cadastrarDemanda, cadastrarOferta, listar };
+async function remover(req, res) {
+  try {
+    await skillsService.removerHabilidade(req.usuario.id_usuario, req.params.id_habilidade);
+    return res.status(204).end();
+  } catch (erro) {
+    if (erro.status) {
+      return res.status(erro.status).json({ erro: erro.message });
+    }
+    console.error(erro);
+    return res.status(500).json({ erro: 'Erro interno do servidor.' });
+  }
+}
+
+module.exports = { cadastrarDemanda, cadastrarOferta, listar, remover };

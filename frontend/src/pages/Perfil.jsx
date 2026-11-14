@@ -12,6 +12,7 @@ function BlocoHabilidade({
   disciplinas,
   ocupado,
   onAdicionar,
+  onRemover,
 }) {
   const [escolhida, setEscolhida] = useState('');
   const disponiveis = disciplinas.filter(
@@ -34,7 +35,16 @@ function BlocoHabilidade({
         ) : (
           itens.map((item) => (
             <li key={item.id_habilidade} className="habilidades__item">
-              {item.nome_disciplina}
+              <span>{item.nome_disciplina}</span>
+              <button
+                type="button"
+                className="habilidades__remover"
+                aria-label={`Remover ${item.nome_disciplina}`}
+                disabled={ocupado}
+                onClick={() => onRemover(item.id_habilidade)}
+              >
+                Remover
+              </button>
             </li>
           ))
         )}
@@ -223,6 +233,13 @@ export default function Perfil() {
       }, 'Disciplina adicionada.');
   }
 
+  function remover(id_habilidade) {
+    return executar(async () => {
+      await api(`/skills/${id_habilidade}`, { method: 'DELETE' });
+      setSkills(await api('/skills'));
+    }, 'Disciplina removida.');
+  }
+
   function alternarHorario(chave) {
     setDisponibilidade((atual) => {
       const proximo = new Set(atual);
@@ -334,6 +351,7 @@ export default function Perfil() {
               disciplinas={disciplinas}
               ocupado={ocupado}
               onAdicionar={adicionar('oferta')}
+              onRemover={remover}
             />
             <BlocoHabilidade
               titulo="O que eu quero aprender"
@@ -345,6 +363,7 @@ export default function Perfil() {
               disciplinas={disciplinas}
               ocupado={ocupado}
               onAdicionar={adicionar('demanda')}
+              onRemover={remover}
             />
           </div>
           <QuadroDisponibilidade
