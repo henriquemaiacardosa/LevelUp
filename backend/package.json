@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
+    "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "prisma:generate": "prisma generate",
+    "prisma:deploy": "prisma migrate deploy"
   },
   "prisma": {
     "seed": "node prisma/seed.js"

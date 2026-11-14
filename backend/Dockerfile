@@ -7,7 +7,7 @@ RUN apt-get update -y \
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm ci --include=dev
+RUN npm ci --include=dev --ignore-scripts
 
 COPY prisma ./prisma
 COPY prisma.config.ts ./

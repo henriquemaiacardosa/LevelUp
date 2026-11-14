@@ -180,7 +180,7 @@ export default function Perfil() {
       }
     }
 
-    carregar();
+    void carregar();
     return () => {
       ativo = false;
     };
