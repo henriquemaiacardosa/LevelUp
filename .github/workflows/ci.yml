@@ -46,6 +46,11 @@ jobs:
       - run: npx prisma migrate deploy
       - run: npm test
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cobertura-backend
+          path: backend/coverage/lcov.info
+
   frontend:
     runs-on: ubuntu-latest
 
@@ -64,5 +69,39 @@ jobs:
 
       - run: npm ci
       - run: npm run lint
-      - run: npm test
+      - run: npm run coverage
       - run: npm run build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cobertura-frontend
+          path: frontend/coverage/lcov.info
+
+  sonar:
+    needs: [test, frontend]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: cobertura-backend
+          path: backend/coverage
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: cobertura-frontend
+          path: frontend/coverage
+
+      - name: Ajusta caminhos do lcov para a raiz do repositório
+        run: |
+          sed -i 's#^SF:src/#SF:backend/src/#' backend/coverage/lcov.info
+          sed -i 's#^SF:src/#SF:frontend/src/#' frontend/coverage/lcov.info
+
+      - name: Análise SonarQube Cloud
+        uses: SonarSource/sonarqube-scan-action@4d1dc0c91ee400dcf8a6dddf2f705ac36542e304 # v8.4.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
