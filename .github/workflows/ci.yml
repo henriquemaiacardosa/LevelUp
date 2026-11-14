@@ -102,6 +102,6 @@ jobs:
           sed -i 's#^SF:src/#SF:frontend/src/#' frontend/coverage/lcov.info
 
       - name: Análise SonarQube Cloud
-        uses: SonarSource/sonarqube-scan-action@v8.4.0
+        uses: SonarSource/sonarqube-scan-action@4d1dc0c91ee400dcf8a6dddf2f705ac36542e304 # v8.4.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
