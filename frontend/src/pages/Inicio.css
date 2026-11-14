@@ -1,0 +1,220 @@
+.inicio {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.inicio__titulo {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 1rem + 2.5vw, 2.5rem);
+  line-height: 1.1;
+}
+
+.inicio__carregando {
+  color: var(--nevoa-fraca);
+}
+
+.inicio__topo {
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* nível e xp */
+.nivel {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.75rem;
+}
+
+.nivel__numero {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.nivel__barra {
+  position: relative;
+  height: 1rem;
+  overflow: hidden;
+  background: var(--noite);
+  border: 1px solid var(--linha);
+}
+
+.nivel__barra::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent calc(10% - 2px),
+    var(--noite) calc(10% - 2px),
+    var(--noite) 10%
+  );
+}
+
+.nivel__preenchimento {
+  display: block;
+  width: var(--parte);
+  height: 100%;
+  background: var(--nevoa);
+  transform-origin: left;
+  animation: preencher-nivel 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s both;
+}
+
+.nivel__texto {
+  color: var(--nevoa-fraca);
+  font-size: 0.9375rem;
+}
+
+.totais {
+  display: flex;
+  gap: 2.5rem;
+  margin: 0.75rem 0 0;
+}
+
+.totais__item {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.totais__valor {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 2rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.totais__rotulo {
+  color: var(--nevoa-fraca);
+  font-size: 0.9375rem;
+}
+
+.totais__item--ensino .totais__valor {
+  color: var(--ouro);
+}
+
+.totais__item--aprendizado .totais__valor {
+  color: var(--ciano);
+}
+
+@keyframes preencher-nivel {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* atalhos */
+.atalhos {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.atalhos .botao {
+  min-height: 3.5rem;
+  font-size: 1.125rem;
+}
+
+/* agenda */
+.agenda__titulo {
+  margin-bottom: 1rem;
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.375rem;
+}
+
+.agenda__lista {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.agenda__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding: 1rem 1.25rem;
+  background: var(--painel);
+  border: 1px solid var(--linha);
+  border-left-width: 4px;
+}
+
+.agenda__item--ensino {
+  border-left-color: var(--ouro);
+}
+
+.agenda__item--aprendizado {
+  border-left-color: var(--ciano);
+}
+
+.agenda__disciplina {
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.agenda__detalhe {
+  color: var(--nevoa-fraca);
+  font-size: 0.9375rem;
+}
+
+.agenda__lado {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.selo {
+  padding: 0.15rem 0.65rem;
+  border: 1px solid var(--nevoa-fraca);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.selo--pendente {
+  border-style: dashed;
+  color: var(--nevoa-fraca);
+}
+
+.selo--confirmada {
+  border-style: solid;
+  color: var(--nevoa);
+}
+
+.agenda__vazia {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+  padding: 1.5rem;
+  background: var(--painel);
+  border: 1px dashed var(--linha);
+  color: var(--nevoa-fraca);
+}
+
+.agenda__link {
+  color: var(--ouro);
+  font-weight: 600;
+}
+
+@media (min-width: 48rem) {
+  .inicio__topo {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .atalhos {
+    align-content: center;
+  }
+}

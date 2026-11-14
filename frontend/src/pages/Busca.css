@@ -1,0 +1,128 @@
+.busca {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.busca__titulo {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 1rem + 2.5vw, 2.5rem);
+  line-height: 1.1;
+}
+
+.busca__texto {
+  margin-top: 0.5rem;
+  color: var(--nevoa-fraca);
+}
+
+.busca__filtro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 1rem;
+  max-width: 36rem;
+}
+
+.busca__filtro .campo {
+  flex: 1 1 14rem;
+}
+
+.busca__vazio {
+  padding: 1.5rem;
+  background: var(--painel);
+  border: 1px dashed var(--linha);
+  color: var(--nevoa-fraca);
+}
+
+.busca__link {
+  color: var(--ouro);
+  font-weight: 600;
+}
+
+.busca__cancelar {
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  background: none;
+  border: 0;
+  color: var(--nevoa-fraca);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.busca__cancelar:hover {
+  color: var(--nevoa);
+}
+
+.aviso--ok {
+  display: grid;
+  gap: 0.35rem;
+  border-left-color: var(--ciano);
+  background: rgb(76 212 232 / 0.1);
+}
+
+.tutores {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tutor {
+  display: grid;
+  gap: 1.25rem;
+  align-content: space-between;
+  padding: 1.25rem;
+  background: var(--painel);
+  border: 1px solid var(--linha);
+  border-left: 4px solid var(--ouro);
+}
+
+.tutor__cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.tutor__inicial {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  background: rgb(245 184 61 / 0.14);
+  color: var(--ouro);
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.375rem;
+  clip-path: var(--forma-botao);
+}
+
+.tutor__nome {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.1875rem;
+}
+
+.tutor__detalhe {
+  color: var(--nevoa-fraca);
+  font-size: 0.9375rem;
+}
+
+.solicitacao {
+  display: grid;
+  gap: 1rem;
+}
+
+.solicitacao__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+@media (min-width: 48rem) {
+  .tutores {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

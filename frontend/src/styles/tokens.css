@@ -1,0 +1,34 @@
+:root {
+  --noite: #0d1226;
+  --painel: #151c38;
+  --linha: #2e3a6b;
+  --nevoa: #e8ebfa;
+  --nevoa-fraca: #9aa4cc;
+  --ouro: #f5b83d;
+  --ouro-claro: #ffd57a;
+  --ouro-tinta: #1a1405;
+  --ciano: #4cd4e8;
+  --perigo: #ff7a88;
+
+  --fonte-titulo: 'Chakra Petch', system-ui, sans-serif;
+  --fonte-texto: 'Figtree', system-ui, sans-serif;
+
+  --corte: 16px;
+  --forma-painel: polygon(
+    var(--corte) 0,
+    100% 0,
+    100% calc(100% - var(--corte)),
+    calc(100% - var(--corte)) 100%,
+    0 100%,
+    0 var(--corte)
+  );
+  --forma-painel-interno: polygon(
+    calc(var(--corte) - 1px) 0,
+    100% 0,
+    100% calc(100% - var(--corte) + 1px),
+    calc(100% - var(--corte) + 1px) 100%,
+    0 100%,
+    0 calc(var(--corte) - 1px)
+  );
+  --forma-botao: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
