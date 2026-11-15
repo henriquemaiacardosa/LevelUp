@@ -21,6 +21,7 @@ async function solicitar(req, res) {
     if (erro.status) {
       return res.status(erro.status).json({ erro: erro.message });
     }
+    console.error(erro);
     return res.status(500).json({ erro: 'Erro interno ao solicitar mentoria.' });
   }
 }
@@ -47,6 +48,7 @@ async function responder(req, res) {
     if (erro.status) {
       return res.status(erro.status).json({ erro: erro.message });
     }
+    console.error(erro);
     return res.status(500).json({ erro: 'Erro interno ao responder à solicitação.' });
   }
 }
@@ -73,6 +75,7 @@ async function definirLink(req, res) {
     if (erro.status) {
       return res.status(erro.status).json({ erro: erro.message });
     }
+    console.error(erro);
     return res.status(500).json({ erro: 'Erro interno ao definir o link.' });
   }
 }
@@ -94,6 +97,7 @@ async function concluir(req, res) {
     if (erro.status) {
       return res.status(erro.status).json({ erro: erro.message });
     }
+    console.error(erro);
     return res.status(500).json({ erro: 'Erro interno ao concluir a mentoria.' });
   }
 }
@@ -109,6 +113,7 @@ async function listar(req, res) {
     if (erro.status) {
       return res.status(erro.status).json({ erro: erro.message });
     }
+    console.error(erro);
     return res.status(500).json({ erro: 'Erro interno do servidor.' });
   }
 }
@@ -130,6 +135,7 @@ async function cancelar(req, res) {
     if (erro.status) {
       return res.status(erro.status).json({ erro: erro.message });
     }
+    console.error(erro);
     return res.status(500).json({ erro: 'Erro interno do servidor.' });
   }
 }
