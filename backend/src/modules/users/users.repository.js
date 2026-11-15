@@ -34,4 +34,32 @@ async function buscarPerfilPorId(id_usuario) {
   });
 }
 
-module.exports = { atualizarPerfil, buscarXpPorId, buscarPerfilPorId };
+async function anonimizarUsuario(id_usuario, { nome, email, senha_hash }) {
+  return prisma.$transaction(async (tx) => {
+    await tx.mentoria.updateMany({
+      where: {
+        OR: [{ id_tutor: id_usuario }, { id_aluno: id_usuario }],
+        status: { in: ['PENDENTE', 'CONFIRMADA'] },
+      },
+      data: { status: 'CANCELADA' },
+    });
+    await tx.inventario_Habilidades.deleteMany({ where: { id_usuario } });
+    await tx.disponibilidade.deleteMany({ where: { id_usuario } });
+
+    return tx.usuario.update({
+      where: { id_usuario },
+      data: {
+        nome,
+        email,
+        senha_hash,
+        curso: null,
+        semestre: null,
+        xp_ensino: 0,
+        xp_aprendizado: 0,
+      },
+      select: { id_usuario: true },
+    });
+  });
+}
+
+module.exports = { atualizarPerfil, buscarXpPorId, buscarPerfilPorId, anonimizarUsuario };

@@ -1,3 +1,4 @@
+const crypto = require('node:crypto');
 const usersRepository = require('./users.repository');
 
 async function atualizarPerfil(id_usuario, dados) {
@@ -43,4 +44,21 @@ async function obterPerfil(id_usuario) {
   };
 }
 
+async function excluirConta(id_usuario) {
+  const usuario = await usersRepository.buscarPerfilPorId(id_usuario);
+
+  if (!usuario) {
+    const erro = new Error('Usuário não encontrado.');
+    erro.status = 404;
+    throw erro;
+  }
+
+  await usersRepository.anonimizarUsuario(id_usuario, {
+    nome: 'Usuário removido',
+    email: `removido-${id_usuario}@levelup.invalid`,
+    senha_hash: crypto.randomBytes(32).toString('hex'),
+  });
+}
+
 module.exports = { atualizarPerfil, consultarXp, obterPerfil };
+module.exports = { atualizarPerfil, consultarXp, obterPerfil, excluirConta };
