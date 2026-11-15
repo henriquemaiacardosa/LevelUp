@@ -33,3 +33,12 @@
   background: #8c1d18;
   border-color: #8c1d18;
 }
+.exclusao .painel__conteudo {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.5rem;
+}
+
+.exclusao__titulo {
+  margin: 0;
+}
