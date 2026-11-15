@@ -47,6 +47,7 @@ async function cadastrar(req, res) {
       return res.status(409).json({ erro: erro.message });
     }
 
+    console.error(erro);
     return res.status(500).json({ erro: 'Erro interno ao processar o cadastro.' });
   }
 }
@@ -67,6 +68,7 @@ async function login(req, res) {
       return res.status(401).json({ erro: erro.message });
     }
 
+    console.error(erro);
     return res.status(500).json({ erro: 'Erro interno ao processar o login.' });
   }
 }
