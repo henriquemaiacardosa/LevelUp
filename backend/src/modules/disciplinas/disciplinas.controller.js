@@ -8,6 +8,7 @@ async function listar(req, res) {
     if (erro.status) {
       return res.status(erro.status).json({ erro: erro.message });
     }
+    console.error(erro);
     return res.status(500).json({ erro: 'Erro interno do servidor.' });
   }
 }
