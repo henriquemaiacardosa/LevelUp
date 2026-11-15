@@ -4,6 +4,9 @@ import { api } from '../services/api';
 import Perfil from './Perfil';
 
 vi.mock('../services/api');
+vi.mock('../auth/AuthContext', () => ({
+  useAuth: () => ({ sair: vi.fn() }),
+}));
 
 const PERFIL = {
   id_usuario: 1,
@@ -380,5 +383,18 @@ describe('Perfil - disponibilidade', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Turno inválido.');
     expect(botaoHorario('Sexta', 'noite')).toHaveAttribute('aria-pressed', 'true');
+  });
+});
+
+describe('Perfil - exclusão de conta', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test('mostra o bloco de privacidade com o botão de excluir a conta', async () => {
+    await renderizar();
+
+    expect(screen.getByRole('heading', { name: 'Privacidade (LGPD)' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Excluir minha conta' })).toBeInTheDocument();
   });
 });
