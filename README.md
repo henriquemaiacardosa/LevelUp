@@ -125,3 +125,9 @@ Todos os endpoints, corpos e respostas estão em [`docs/api.md`](docs/api.md).
 ## Autor
 
 Henrique Maia Cardosa, Engenharia de Software, Católica SC.
+
+## Deploy automático
+
+A cada merge na `main`, o GitHub Actions executa o workflow **CI** (testes, lint, build e análise do Sonar). Se tudo passar, o workflow **Deploy** (`.github/workflows/deploy.yml`) pede à instância EC2 que atualize a API pelo AWS Systems Manager (SSM Run Command): `git pull` da `main` e `docker compose up -d --build`. Não há deploy manual por SSH ou FTP, e a porta 22 do servidor fica fechada. O front-end é publicado pelo AWS Amplify, também a partir do GitHub.
+
+Secrets necessários no repositório: `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY`, de um usuário IAM exclusivo do deploy, com permissão apenas para enviar comandos SSM à instância da API.
