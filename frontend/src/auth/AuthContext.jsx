@@ -1,11 +1,16 @@
-import { createContext, useContext, useState } from 'react';
-import { api } from '../services/api';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { api, definirAoSessaoExpirar } from '../services/api';
 import { salvarToken, obterToken, limparToken } from '../services/tokenStorage';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [autenticado, setAutenticado] = useState(() => obterToken() !== null);
+
+  useEffect(() => {
+    definirAoSessaoExpirar(() => setAutenticado(false));
+    return () => definirAoSessaoExpirar(null);
+  }, []);
 
   async function entrar(email, senha) {
     const { token } = await api('/auth/login', {
