@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from 'react';
 import { api } from '../services/api';
+import ExcluirConta from './ExcluirConta';
 import './Perfil.css';
 
 function BlocoHabilidade({
@@ -372,6 +373,7 @@ export default function Perfil() {
             onAlternar={alternarHorario}
             onSalvar={salvarDisponibilidade}
           />
+          <ExcluirConta />
         </>
       )}
     </section>
