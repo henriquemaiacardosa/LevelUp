@@ -3,8 +3,13 @@ jest.mock('./mentorias.repository');
 const mentoriasRepository = require('./mentorias.repository');
 const mentoriasService = require('./mentorias.service');
 
-const pendente = { id_mentoria: 1, id_aluno: 10, id_tutor: 20, status: 'PENDENTE' };
-
+const pendente = {
+  id_mentoria: 1,
+  id_aluno: 10,
+  id_tutor: 20,
+  status: 'PENDENTE',
+  data_hora: new Date(Date.now() + 60 * 60 * 1000),
+};
 describe('MentoriasService - Responder solicitação (RF11)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
