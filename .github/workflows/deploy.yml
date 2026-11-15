@@ -1,0 +1,51 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-producao
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: us-east-2
+      INSTANCE_ID: i-02a2e73bdcda5808b
+    steps:
+      - name: Credenciais AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Atualizar a API na EC2 via SSM
+        run: |
+          CMD='sudo -u ubuntu -H bash -c "cd /home/ubuntu/LevelUp && git fetch origin main && git checkout main && git pull --ff-only origin main && cd deploy && docker compose up -d --build && docker compose logs --tail 20 api"'
+          PARAMS=$(jq -n --arg c "$CMD" '{commands: [$c]}')
+          COMMAND_ID=$(aws ssm send-command \
+            --instance-ids "$INSTANCE_ID" \
+            --document-name "AWS-RunShellScript" \
+            --comment "Deploy LevelUp ${{ github.event.workflow_run.head_sha }}" \
+            --parameters "$PARAMS" \
+            --query "Command.CommandId" --output text)
+          echo "Comando SSM: $COMMAND_ID"
+          STATUS=InProgress
+          for i in $(seq 1 60); do
+            STATUS=$(aws ssm get-command-invocation --command-id "$COMMAND_ID" --instance-id "$INSTANCE_ID" --query Status --output text 2>/dev/null || echo Pending)
+            echo "Status: $STATUS"
+            case "$STATUS" in Success|Failed|Cancelled|TimedOut) break ;; esac
+            sleep 10
+          done
+          aws ssm get-command-invocation --command-id "$COMMAND_ID" --instance-id "$INSTANCE_ID" --query StandardOutputContent --output text
+          aws ssm get-command-invocation --command-id "$COMMAND_ID" --instance-id "$INSTANCE_ID" --query StandardErrorContent --output text
+          test "$STATUS" = "Success"
