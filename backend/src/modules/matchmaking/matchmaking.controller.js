@@ -11,6 +11,7 @@ async function buscar(req, res) {
     const tutores = await matchmakingService.buscarTutores(req.usuario.id_usuario, id_disciplina);
     return res.status(200).json(tutores);
   } catch (erro) {
+    console.error(erro);
     return res.status(500).json({ erro: 'Erro interno ao buscar tutores.' });
   }
 }

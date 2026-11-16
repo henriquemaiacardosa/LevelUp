@@ -1,6 +1,12 @@
-import { obterToken } from './tokenStorage';
+import { obterToken, limparToken } from './tokenStorage';
 
 const URL_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api';
+
+let aoSessaoExpirar = null;
+
+export function definirAoSessaoExpirar(callback) {
+  aoSessaoExpirar = callback;
+}
 
 export class ApiError extends Error {
   constructor(status, mensagem) {
@@ -41,6 +47,10 @@ export async function api(caminho, { method = 'GET', body } = {}) {
   }
 
   if (!resposta.ok) {
+      if (resposta.status === 401 && token) {
+          limparToken();
+           aoSessaoExpirar?.();
+      }
     throw new ApiError(resposta.status, corpo?.erro ?? 'Erro inesperado. Tente novamente.');
   }
 

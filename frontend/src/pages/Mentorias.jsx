@@ -44,6 +44,7 @@ function Acoes({ mentoria, ocupado, onAcao }) {
   const [linkDigitado, setLinkDigitado] = useState(mentoria.link_videochamada ?? '');
   const ensina = mentoria.papel === 'TUTOR';
   const base = `/mentorias/${mentoria.id_mentoria}`;
+  const podeConcluir = new Date(mentoria.data_hora) <= new Date();
 
   const cancelar = (
     <button
@@ -112,6 +113,11 @@ function Acoes({ mentoria, ocupado, onAcao }) {
             placeholder="https://meet.google.com/…"
           />
         </div>
+        {!podeConcluir && (
+          <p className="mentoria__detalhe">
+            Dispon&iacute;vel para concluir a partir de {formatarData(mentoria.data_hora)}.
+          </p>
+        )}
         <div className="mentoria__botoes">
           <button
             type="button"
@@ -130,7 +136,7 @@ function Acoes({ mentoria, ocupado, onAcao }) {
           <button
             type="button"
             className="botao botao--primario"
-            disabled={ocupado}
+            disabled={ocupado || !podeConcluir}
             onClick={() => onAcao(`${base}/concluir`, { method: 'PATCH' }, 'Mentoria concluída.')}
           >
             Concluir mentoria

@@ -49,6 +49,9 @@ async function responderSolicitacao({ id_mentoria, id_usuario, status }) {
   if (mentoria.status !== 'PENDENTE') {
     throw erroHttp(409, 'Só é possível responder a mentorias pendentes.');
   }
+  if (status === 'CONFIRMADA' && new Date(mentoria.data_hora) <= new Date()) {
+    throw erroHttp(409, 'Não é possível confirmar uma mentoria cuja data já passou.');
+  }
 
   return mentoriasRepository.atualizarStatus(id_mentoria, status);
 }

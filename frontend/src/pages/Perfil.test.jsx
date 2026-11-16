@@ -4,6 +4,9 @@ import { api } from '../services/api';
 import Perfil from './Perfil';
 
 vi.mock('../services/api');
+vi.mock('../auth/AuthContext', () => ({
+  useAuth: () => ({ sair: vi.fn() }),
+}));
 
 const PERFIL = {
   id_usuario: 1,
@@ -224,6 +227,72 @@ describe('Perfil - habilidades', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Adicionar ao que eu ensino' }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Habilidade já cadastrada.');
+    
+  });
+
+    test('cada disciplina da lista tem um botão para remover', async () => {
+    await renderizar();
+
+    const ensina = screen.getByRole('list', { name: 'Disciplinas que eu ensino' });
+    expect(within(ensina).getByRole('button', { name: 'Remover Cálculo I' })).toBeEnabled();
+  });
+
+  test('remove uma disciplina que a pessoa ensina e atualiza a lista', async () => {
+    const estado = await renderizar();
+
+    estado.skills = { oferta: [], demanda: [] };
+    const ensina = screen.getByRole('list', { name: 'Disciplinas que eu ensino' });
+    await userEvent.click(within(ensina).getByRole('button', { name: 'Remover Cálculo I' }));
+
+    expect(api).toHaveBeenCalledWith('/skills/1', { method: 'DELETE' });
+    expect(await within(ensina).findByText('Nenhuma disciplina cadastrada.')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('Disciplina removida.');
+  });
+
+  test('remover de quem quer aprender usa o id da habilidade daquele bloco', async () => {
+    await renderizar({
+      skills: {
+        oferta: [{ id_habilidade: 1, id_disciplina: 3, nome_disciplina: 'Cálculo I' }],
+        demanda: [{ id_habilidade: 9, id_disciplina: 3, nome_disciplina: 'Cálculo I' }],
+      },
+    });
+
+    const aprende = screen.getByRole('list', { name: 'Disciplinas que eu quero aprender' });
+    await userEvent.click(within(aprende).getByRole('button', { name: 'Remover Cálculo I' }));
+
+    expect(api).toHaveBeenCalledWith('/skills/9', { method: 'DELETE' });
+    expect(api).not.toHaveBeenCalledWith('/skills/1', { method: 'DELETE' });
+  });
+
+  test('erro ao remover mostra a mensagem do backend e mantém a disciplina na lista', async () => {
+    await renderizar({
+      escrita: () => Promise.reject(new Error('Habilidade não encontrada.')),
+    });
+
+    const ensina = screen.getByRole('list', { name: 'Disciplinas que eu ensino' });
+    await userEvent.click(within(ensina).getByRole('button', { name: 'Remover Cálculo I' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Habilidade não encontrada.');
+    expect(within(ensina).getByText('Cálculo I')).toBeInTheDocument();
+  });
+
+  test('o botão de remover fica desabilitado enquanto a ação está em andamento', async () => {
+    let concluir;
+    await renderizar({
+      escrita: () =>
+        new Promise((resolve) => {
+          concluir = resolve;
+        }),
+    });
+
+    const ensina = screen.getByRole('list', { name: 'Disciplinas que eu ensino' });
+    const botao = within(ensina).getByRole('button', { name: 'Remover Cálculo I' });
+    await userEvent.click(botao);
+
+    expect(botao).toBeDisabled();
+
+    concluir({});
+    expect(await screen.findByRole('status')).toHaveTextContent('Disciplina removida.');
   });
 });
 
@@ -314,5 +383,18 @@ describe('Perfil - disponibilidade', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Turno inválido.');
     expect(botaoHorario('Sexta', 'noite')).toHaveAttribute('aria-pressed', 'true');
+  });
+});
+
+describe('Perfil - exclusão de conta', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test('mostra o bloco de privacidade com o botão de excluir a conta', async () => {
+    await renderizar();
+
+    expect(screen.getByRole('heading', { name: 'Privacidade (LGPD)' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Excluir minha conta' })).toBeInTheDocument();
   });
 });

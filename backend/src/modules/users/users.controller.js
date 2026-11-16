@@ -16,6 +16,7 @@ async function atualizarPerfil(req, res) {
 
     return res.status(200).json(usuarioAtualizado);
   } catch (erro) {
+    console.error(erro);
     return res.status(500).json({ erro: 'Erro ao atualizar o perfil.' });
   }
 }
@@ -28,6 +29,7 @@ async function consultarXp(req, res) {
     if (erro.status) {
       return res.status(erro.status).json({ erro: erro.message });
     }
+    console.error(erro);
     return res.status(500).json({ erro: 'Erro interno do servidor.' });
   }
 }
@@ -40,8 +42,21 @@ async function obterPerfil(req, res) {
     if (erro.status) {
       return res.status(erro.status).json({ erro: erro.message });
     }
+    console.error(erro);
     return res.status(500).json({ erro: 'Erro interno do servidor.' });
   }
 }
 
-module.exports = { atualizarPerfil, consultarXp, obterPerfil };
+async function excluir(req, res) {
+  try {
+    await usersService.excluirConta(req.usuario.id_usuario);
+    return res.status(204).end();
+  } catch (erro) {
+    if (erro.status) {
+      return res.status(erro.status).json({ erro: erro.message });
+    }
+    console.error(erro);
+    return res.status(500).json({ erro: 'Erro interno do servidor.' });
+  }
+}
+module.exports = { atualizarPerfil, consultarXp, obterPerfil, excluir };
