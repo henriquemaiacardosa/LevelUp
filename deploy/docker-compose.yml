@@ -5,6 +5,13 @@ services:
     env_file: .env
     expose:
       - "3000"
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: us-east-2
+        awslogs-group: levelup-api
+        awslogs-create-group: "true"
+        awslogs-stream: api
 
   caddy:
     image: caddy:2
