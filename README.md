@@ -131,3 +131,7 @@ Henrique Maia Cardosa, Engenharia de Software, Cat√≥lica SC.
 A cada merge na `main`, o GitHub Actions executa o workflow **CI** (testes, lint, build e an√°lise do Sonar). Se tudo passar, o workflow **Deploy** (`.github/workflows/deploy.yml`) pede √† inst√¢ncia EC2 que atualize a API pelo AWS Systems Manager (SSM Run Command): `git pull` da `main` e `docker compose up -d --build`. N√£o h√° deploy manual por SSH ou FTP, e a porta 22 do servidor fica fechada. O front-end √© publicado pelo AWS Amplify, tamb√©m a partir do GitHub.
 
 Secrets necess√°rios no reposit√≥rio: `AWS_ACCESS_KEY_ID` e `AWS_SECRET_ACCESS_KEY`, de um usu√°rio IAM exclusivo do deploy, com permiss√£o apenas para enviar comandos SSM √† inst√¢ncia da API.
+## DocumentaÁ„o
+
+A documentaÁ„o completa (arquitetura, API, instalaÁ„o, deploy, monitoramento, seguranÁa e decisıes) est· na [Wiki do projeto](https://github.com/henriquemaiacardosa/LevelUp/wiki).
+
