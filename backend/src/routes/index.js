@@ -8,6 +8,7 @@ const leaderboardRoutes = require('../modules/leaderboard/leaderboard.routes');
 const disciplinasRoutes = require('../modules/disciplinas/disciplinas.routes');
 const disponibilidadeRoutes = require('../modules/disponibilidade/disponibilidade.routes');
 const tutoresRoutes = require('../modules/tutores/tutores.routes');
+const healthRoutes = require('../modules/health/health.routes');
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ router.use('/leaderboard', leaderboardRoutes);
 router.use('/disciplinas', disciplinasRoutes);
 router.use('/disponibilidade', disponibilidadeRoutes);
 router.use('/tutores', tutoresRoutes);
+router.use('/health', healthRoutes);
 
 module.exports = router;
